@@ -29,6 +29,14 @@ public class LightEnemy : KinematicBody2D
         set { attackDamage = value; }
     }
 
+    private float attackSpeed;
+    [Export] public float AttackSpeed
+    {
+        get { return attackSpeed; }
+        set { attackSpeed = value; }
+    }
+    
+
     private int detectionRadius;
     [Export]
     public int DetectionRadius
@@ -51,14 +59,21 @@ public class LightEnemy : KinematicBody2D
     {
         // GOAL: Find the nearest objective and kill it, otherwise patrol (basic AI)
         // Update detection Radius
+
+        // References
         detectionRange = GetNode<Area2D>("DetectionRange");
         lightEnemyAttack = GetNode<LightEnemyAttack>("LightEnemyAttack");
 
+        // Update Detection Radius
         detectionShape = detectionRange.GetChild<CollisionShape2D>(0);
         CircleShape2D shape = (CircleShape2D)detectionShape.Shape;
         shape.Radius = detectionRadius;
 
-        detectionRange.Connect("body_entered", this, "OnEnteredDetection");
+        // Signals
+        detectionRange.Connect("body_entered", this, nameof(OnEnteredDetection));
+        lightEnemyAttack.Connect(nameof(LightEnemyAttack.PlayerEnteredRegion), this, nameof(OnEnteredAttackRange));
+        lightEnemyAttack.Connect(nameof(LightEnemyAttack.PlayerExitedRegion), this, nameof(OnExittedAttackRange));
+        lightEnemyAttack.Connect(nameof(LightEnemyAttack.PlayerHit), this, nameof(OnHitPlayer));
     }
 
     public override void _Process(float delta)
@@ -66,6 +81,7 @@ public class LightEnemy : KinematicBody2D
         base._Process(delta);
 
         if (player != null) {
+            // Move Towards Player
             Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
             MoveAndSlide(direction * moveSpeed);
             lightEnemyAttack.UpdateDirection(player.GlobalPosition);
@@ -73,16 +89,23 @@ public class LightEnemy : KinematicBody2D
     }
 
     private void OnEnteredDetection(Node bodyEntered)
-    {
-        GD.Print("Body Entered " + bodyEntered.Name);
+    {  
+        GD.Print("Player Entered Detection Radius!");
         player = (Node2D)bodyEntered;
-        lightEnemyAttack.StartAttack(1f, player.GlobalPosition);
     }
 
     private void OnExitedDetection(Node bodyExited)
     {
-        GD.Print("Lost track of player ");
+        GD.Print("Player Exitted Detection Radius!");
         player = null;
+    }
+
+    private void OnEnteredAttackRange() {
+        lightEnemyAttack.StartAttack(attackSpeed, player.GlobalPosition);
+    }
+
+    private void OnExittedAttackRange() {
+        lightEnemyAttack.StopAttack();
     }
 
     private void UpdateDetectionRadius()
@@ -92,6 +115,11 @@ public class LightEnemy : KinematicBody2D
 
         CircleShape2D shape = (CircleShape2D)detectionShape.Shape;
         shape.Radius = detectionRadius;
+    }
+
+    private void OnHitPlayer() {
+        Player p = (Player) player;
+        p.TakeDamage(attackDamage);
     }
 
     public void TakeDamage(int dmg) {

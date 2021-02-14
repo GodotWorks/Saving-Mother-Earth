@@ -40,7 +40,11 @@ script = ExtResource( 2 )
 MoveSpeed = 80
 Health = 5
 AttackDamage = 2
+AttackSpeed = 0.4
 DetectionRadius = 360
+
+[node name="LightEnemyAttack" parent="." instance=ExtResource( 3 )]
+rotation = 1.5708
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 5 )
@@ -56,6 +60,3 @@ collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource( 7 )
-
-[node name="LightEnemyAttack" parent="." instance=ExtResource( 3 )]
-rotation = 1.5708

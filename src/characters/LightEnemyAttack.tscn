@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/sprites/characters/Light_Enemy.png" type="Texture" id=1]
 [ext_resource path="res://src/characters/LightEnemyAttack.cs" type="Script" id=2]
@@ -25,7 +25,7 @@ region = Rect2( 64, 16, 16, 16 )
 
 [sub_resource type="SpriteFrames" id=6]
 animations = [ {
-"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"frames": [ null, SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
@@ -34,15 +34,38 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=7]
 extents = Vector2( 2, 6 )
 
+[sub_resource type="CircleShape2D" id=8]
+radius = 13.3333
+
 [node name="LightEnemyAttack" type="Area2D"]
+scale = Vector2( 3, 4 )
+monitorable = false
+collision_layer = 4
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 0, -8 )
+position = Vector2( 0, -6 )
 frames = SubResource( 6 )
-frame = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( -1.66893e-06, -10 )
+position = Vector2( 0, -7 )
 shape = SubResource( 7 )
+
+[node name="AttackRegion" type="Area2D" parent="."]
+position = Vector2( 0, -7 )
+collision_layer = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRegion"]
+position = Vector2( 0, 7 )
+shape = SubResource( 8 )
+
+[node name="AttackTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="."]
+one_shot = true
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]
+[connection signal="body_entered" from="AttackRegion" to="." method="OnAttackRegionEntered"]
+[connection signal="body_exited" from="AttackRegion" to="." method="OnAttackRegionExitted"]
+[connection signal="timeout" from="AttackTimer" to="." method="OnAttackTimerTimeout"]
+[connection signal="timeout" from="CooldownTimer" to="." method="OnCooldownTimerTimeout"]
