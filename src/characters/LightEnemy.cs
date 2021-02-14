@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Light_Enemy : KinematicBody2D
+public class LightEnemy : KinematicBody2D
 {
     private int moveSpeed;
     [Export]
@@ -45,13 +45,15 @@ public class Light_Enemy : KinematicBody2D
     private Area2D detectionRange;
     private CollisionShape2D detectionShape;
     private Node2D player;
+    private LightEnemyAttack lightEnemyAttack;
 
     public override void _Ready()
     {
-        // Find the nearest objective and kill it, otherwise patrol (basic AI)
+        // GOAL: Find the nearest objective and kill it, otherwise patrol (basic AI)
         // Update detection Radius
         detectionRange = GetNode<Area2D>("DetectionRange");
-        GD.Print(detectionRange);
+        lightEnemyAttack = GetNode<LightEnemyAttack>("LightEnemyAttack");
+
         detectionShape = detectionRange.GetChild<CollisionShape2D>(0);
         CircleShape2D shape = (CircleShape2D)detectionShape.Shape;
         shape.Radius = detectionRadius;
@@ -66,6 +68,7 @@ public class Light_Enemy : KinematicBody2D
         if (player != null) {
             Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
             MoveAndSlide(direction * moveSpeed);
+            lightEnemyAttack.UpdateDirection(player.GlobalPosition);
         }
     }
 
@@ -73,6 +76,7 @@ public class Light_Enemy : KinematicBody2D
     {
         GD.Print("Body Entered " + bodyEntered.Name);
         player = (Node2D)bodyEntered;
+        lightEnemyAttack.StartAttack(1f, player.GlobalPosition);
     }
 
     private void OnExitedDetection(Node bodyExited)

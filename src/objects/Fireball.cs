@@ -18,8 +18,8 @@ public class Fireball : KinematicBody2D
         if (launch) {
             KinematicCollision2D collision = MoveAndCollide(direction * Speed * delta);
             if (collision != null) {
-                if  (collision.Collider is Light_Enemy){
-                    Light_Enemy enemy = (Light_Enemy) collision.Collider;
+                if  (collision.Collider is LightEnemy){
+                    LightEnemy enemy = (LightEnemy) collision.Collider;
                     enemy.TakeDamage(2);
                 }
 

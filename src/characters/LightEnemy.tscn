@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/sprites/characters/Light_Enemy.png" type="Texture" id=1]
-[ext_resource path="res://src/characters/Light_Enemy.cs" type="Script" id=2]
+[ext_resource path="res://src/characters/LightEnemy.cs" type="Script" id=2]
+[ext_resource path="res://src/characters/LightEnemyAttack.tscn" type="PackedScene" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
@@ -33,7 +34,7 @@ extents = Vector2( 6, 6 )
 [sub_resource type="CircleShape2D" id=7]
 radius = 120.0
 
-[node name="Light_Enemy" type="KinematicBody2D"]
+[node name="LightEnemy" type="KinematicBody2D"]
 collision_layer = 4
 script = ExtResource( 2 )
 MoveSpeed = 80
@@ -44,7 +45,7 @@ DetectionRadius = 360
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 5 )
 animation = "Move"
-frame = 3
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -55,3 +56,6 @@ collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource( 7 )
+
+[node name="LightEnemyAttack" parent="." instance=ExtResource( 3 )]
+rotation = 1.5708
