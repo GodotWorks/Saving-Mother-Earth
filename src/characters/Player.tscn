@@ -43,7 +43,7 @@ zoom = Vector2( 0.4, 0.4 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 5 )
 animation = "Move"
-frame = 1
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

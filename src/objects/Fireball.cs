@@ -13,11 +13,18 @@ public class Fireball : KinematicBody2D
         set { speed = value; }
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(float delta)
+    public override void _PhysicsProcess(float delta)
     {
         if (launch) {
-            MoveAndSlide(direction * Speed);
+            KinematicCollision2D collision = MoveAndCollide(direction * Speed * delta);
+            if (collision != null) {
+                if  (collision.Collider is Light_Enemy){
+                    Light_Enemy enemy = (Light_Enemy) collision.Collider;
+                    enemy.TakeDamage(2);
+                }
+
+                QueueFree();
+            }
         }
     }
 

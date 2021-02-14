@@ -8,9 +8,9 @@ radius = 6.0
 
 [node name="Fireball" type="KinematicBody2D"]
 collision_layer = 2
-collision_mask = 2
+collision_mask = 4
 script = ExtResource( 1 )
-Speed = 100
+Speed = 400
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
