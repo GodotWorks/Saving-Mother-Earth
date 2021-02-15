@@ -105,6 +105,7 @@ public class LightEnemy : KinematicBody2D
     }
 
     private void OnExittedAttackRange() {
+        GD.Print("Exitted");
         lightEnemyAttack.StopAttack();
     }
 
@@ -118,6 +119,7 @@ public class LightEnemy : KinematicBody2D
     }
 
     private void OnHitPlayer() {
+        GD.Print("Hit Player!");
         Player p = (Player) player;
         p.TakeDamage(attackDamage);
     }

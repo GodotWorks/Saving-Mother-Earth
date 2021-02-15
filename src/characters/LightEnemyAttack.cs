@@ -8,12 +8,15 @@ public class LightEnemyAttack : Area2D
     private Timer cooldownTimer;
     private float timeInterval;
     private float timeReset = 0.1f;
+    private bool hit = false; // Prevent double hits
+    private bool attacking = false;
 
 
     // References
     private AnimatedSprite animatedSprite;
     private Vector2 direction;
     private CollisionShape2D attackShape;
+    private Area2D attackRegion;
 
     [Signal]
     public delegate void PlayerEnteredRegion();
@@ -29,8 +32,20 @@ public class LightEnemyAttack : Area2D
         attackShape = GetNode<CollisionShape2D>("CollisionShape2D");
         attackTimer = GetNode<Timer>("AttackTimer");
         cooldownTimer = GetNode<Timer>("CooldownTimer");
+        attackRegion = GetNode<Area2D>("AttackRegion");
 
         attackShape.Disabled = true;
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        CheckForBodies();
+    }
+
+    private void CheckForBodies() {
+        if (attackRegion.GetOverlappingBodies().Count <= 0 && attacking) {
+            EmitSignal(nameof(PlayerExitedRegion));
+        }
     }
 
     private void NextFrame()
@@ -41,9 +56,8 @@ public class LightEnemyAttack : Area2D
     // Time To complete animation (attackspeed)
     public void StartAttack(float timeToComplete, Vector2 target)
     {
-        GD.Print("Starting Attack");
+        attacking = true;
         timeInterval = timeToComplete / animatedSprite.Frames.GetFrameCount("default");
-        GD.Print(timeInterval);
         attackTimer.Start(timeInterval);
         UpdateDirection(target);
     }
@@ -67,15 +81,15 @@ public class LightEnemyAttack : Area2D
         else
         {
             attackTimer.Start(timeInterval);
+            NextFrame();
         }
-
-        NextFrame();
     }
 
     private void OnCooldownTimerTimeout()
     {
         StopAttack();
         attackTimer.Start(timeInterval);
+        attacking = true;
     }
 
     public void StopAttack()
@@ -83,16 +97,23 @@ public class LightEnemyAttack : Area2D
         attackTimer.Stop();
         animatedSprite.Frame = 0;
         CallDeferred(nameof(disableShape));
+        attacking = false;
     }
 
     private void disableShape()
     {
         attackShape.Disabled = true;
+        hit = false;
     }
 
     public void OnBodyEntered(Node bodyEntered)
     {
-        EmitSignal(nameof(PlayerHit));
+        if (!hit)
+        {
+            EmitSignal(nameof(PlayerHit));
+            hit = true;
+        }
+
     }
 
     public void OnAttackRegionEntered(Node bodyEntered)

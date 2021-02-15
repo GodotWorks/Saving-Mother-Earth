@@ -22,7 +22,6 @@ public class GameUI : CanvasLayer
 
 
     private void OnPlayerChangeHP(int newHP) {
-        GD.Print("Player Health Update");
         playerHP.Text = newHP.ToString();
     }
 

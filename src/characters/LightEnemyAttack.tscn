@@ -53,6 +53,7 @@ shape = SubResource( 7 )
 
 [node name="AttackRegion" type="Area2D" parent="."]
 position = Vector2( 0, -7 )
+monitorable = false
 collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRegion"]

@@ -130,7 +130,7 @@ public class Player : KinematicBody2D
         Health -= dmg;
         if (health <= 0)
         {
-            GD.Print("Player Died!");
+            // GD.Print("Player Died!");
         }
     }
 }
