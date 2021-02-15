@@ -32,16 +32,17 @@ animations = [ {
 extents = Vector2( 6, 6 )
 
 [sub_resource type="CircleShape2D" id=7]
-radius = 120.0
+radius = 200.0
 
 [node name="LightEnemy" type="KinematicBody2D"]
 collision_layer = 4
+collision_mask = 5
 script = ExtResource( 2 )
 MoveSpeed = 80
 Health = 5
-AttackDamage = 2
+AttackDamage = 1
 AttackSpeed = 0.4
-DetectionRadius = 360
+DetectionRadius = 200
 
 [node name="LightEnemyAttack" parent="." instance=ExtResource( 3 )]
 rotation = 1.5708
@@ -49,7 +50,7 @@ rotation = 1.5708
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 5 )
 animation = "Move"
-frame = 1
+frame = 3
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

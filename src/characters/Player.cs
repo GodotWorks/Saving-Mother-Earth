@@ -17,7 +17,11 @@ public class Player : KinematicBody2D
     public int Health
     {
         get { return health; }
-        set { health = value; }
+        set
+        {
+            health = value;
+            EmitSignal(nameof(OnPlayerHPChanged), value);
+        }
     }
 
     private int attackDamage;
@@ -48,7 +52,10 @@ public class Player : KinematicBody2D
     // References
     private AnimatedSprite animatedSprite;
     private Timer attackSpeedTimer;
-    
+
+    // Signals
+    [Signal]
+    public delegate void OnPlayerHPChanged(int currentHP);
 
     public override void _Ready()
     {
@@ -61,7 +68,11 @@ public class Player : KinematicBody2D
     public override void _Process(float delta)
     {
         GetInput();
-        velocity = MoveAndSlide(velocity);
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        velocity = MoveAndSlide(velocity * speed);
     }
 
     private void GetInput()
@@ -89,7 +100,7 @@ public class Player : KinematicBody2D
         if (Input.IsActionPressed("shoot"))
             Shoot();
 
-        velocity = velocity.Normalized() * speed;
+        velocity = velocity.Normalized();
     }
 
     private void Shoot()
@@ -109,14 +120,16 @@ public class Player : KinematicBody2D
         }
     }
 
-    private void OnAttackSpeedTimerTimeout() {
+    private void OnAttackSpeedTimerTimeout()
+    {
         canShoot = true;
     }
 
     public void TakeDamage(int dmg)
     {
-        health -= dmg;
-        if (health <= 0) {
+        Health -= dmg;
+        if (health <= 0)
+        {
             GD.Print("Player Died!");
         }
     }

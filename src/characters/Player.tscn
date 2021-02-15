@@ -32,10 +32,10 @@ extents = Vector2( 16, 16 )
 
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 2 )
-Speed = 150
-Health = 20
-AttackDamage = 2
-AttackSpeed = 1.0
+Speed = 120
+Health = 30
+AttackDamage = 4
+AttackSpeed = 0.8
 fireBallSceneFile = "res://src/objects/Fireball.tscn"
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -46,7 +46,7 @@ zoom = Vector2( 0.4, 0.4 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 5 )
 animation = "Move"
-frame = 2
+frame = 3
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
